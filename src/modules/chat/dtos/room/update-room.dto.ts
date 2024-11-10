@@ -19,7 +19,7 @@ export class UpdateRoomDto {
   @IsOptional()
   name: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: false })
   @IsArray()
   @IsString({ each: true })
   @IsUUID(undefined, {

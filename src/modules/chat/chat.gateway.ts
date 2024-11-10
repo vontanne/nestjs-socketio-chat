@@ -138,6 +138,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         updateRoomDto.roomId,
       );
 
+      if (room.type === RoomTypeEnum.DIRECT && updateRoomDto.participants) {
+        throw new WsException(
+          'Direct rooms cannot have their participants updated.',
+        );
+      }
+
       this.validateRoomTypeAndParticipants(
         room.type,
         updateRoomDto.participants,
@@ -210,7 +216,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async onSendMessage(
     @WsCurrentUser() currentUser: UserPayload,
     @MessageBody(new WsValidationPipe()) createMessageDto: CreateMessageDto,
-    @ConnectedSocket() client: Socket,
   ): Promise<void> {
     const userId = currentUser.id;
     const { roomId } = createMessageDto;
